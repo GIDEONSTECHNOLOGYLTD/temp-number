@@ -4,6 +4,46 @@ const Database = require('../database');
 const router = express.Router();
 const db = new Database();
 
+// Get all services
+router.get('/', async (req, res) => {
+  try {
+    const services = await db.getServices();
+    res.json(services);
+  } catch (error) {
+    console.error('Error getting services:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get all countries
+router.get('/countries', async (req, res) => {
+  try {
+    const phoneNumbers = await db.getPhoneNumbers();
+    
+    // Group unique countries
+    const countriesMap = new Map();
+    phoneNumbers.forEach(p => {
+      if (!countriesMap.has(p.country_code)) {
+        countriesMap.set(p.country_code, {
+          code: p.country_code.toLowerCase(),
+          name: p.country_name,
+          availableNumbers: 0
+        });
+      }
+      countriesMap.get(p.country_code).availableNumbers++;
+    });
+
+    const countries = Array.from(countriesMap.values()).sort((a, b) => 
+      a.name.localeCompare(b.name)
+    );
+
+    res.json(countries);
+  } catch (error) {
+    console.error('Error getting countries:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Get pricelist by services
 router.get('/pricelist', async (req, res) => {
   try {

@@ -3,45 +3,70 @@ class TempNumberApp {
         this.socket = null;
         this.currentActivation = null;
         this.timer = null;
-        this.countries = [
-            { code: 'us', name: 'United States', price: '$0.50' },
-            { code: 'gb', name: 'United Kingdom', price: '$0.45' },
-            { code: 'ca', name: 'Canada', price: '$0.40' },
-            { code: 'de', name: 'Germany', price: '$0.35' },
-            { code: 'fr', name: 'France', price: '$0.35' },
-            { code: 'it', name: 'Italy', price: '$0.30' },
-            { code: 'es', name: 'Spain', price: '$0.30' },
-            { code: 'nl', name: 'Netherlands', price: '$0.25' },
-            { code: 'se', name: 'Sweden', price: '$0.25' },
-            { code: 'no', name: 'Norway', price: '$0.25' },
-            { code: 'dk', name: 'Denmark', price: '$0.25' },
-            { code: 'fi', name: 'Finland', price: '$0.25' },
-            { code: 'pl', name: 'Poland', price: '$0.20' },
-            { code: 'cz', name: 'Czech Republic', price: '$0.20' },
-            { code: 'hu', name: 'Hungary', price: '$0.20' },
-            { code: 'ro', name: 'Romania', price: '$0.15' },
-            { code: 'bg', name: 'Bulgaria', price: '$0.15' },
-            { code: 'hr', name: 'Croatia', price: '$0.15' },
-            { code: 'si', name: 'Slovenia', price: '$0.15' },
-            { code: 'sk', name: 'Slovakia', price: '$0.15' }
-        ];
+        this.countries = [];
+        this.services = [];
+        this.selectedService = null;
+        this.selectedCountry = null;
         this.init();
     }
 
     async init() {
-        this.renderCountries();
+        await this.loadCountries();
+        await this.loadServices();
         this.setupEventListeners();
         this.setupWebSocket();
         await this.loadBalance();
+        this.checkAuthentication();
+    }
+
+    checkAuthentication() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/app/create-account';
+        }
+    }
+
+    async loadCountries() {
+        try {
+            const response = await fetch('/api/services/countries');
+            if (response.ok) {
+                this.countries = await response.json();
+                this.renderCountries();
+            } else {
+                console.error('Failed to load countries');
+                this.showToast('Failed to load countries', 'error');
+            }
+        } catch (error) {
+            console.error('Error loading countries:', error);
+            this.showToast('Error loading countries', 'error');
+        }
+    }
+
+    async loadServices() {
+        try {
+            const response = await fetch('/api/services');
+            if (response.ok) {
+                this.services = await response.json();
+            } else {
+                console.error('Failed to load services');
+            }
+        } catch (error) {
+            console.error('Error loading services:', error);
+        }
     }
 
     renderCountries() {
         const grid = document.getElementById('countryGrid');
+        if (!grid) return;
+        
         grid.innerHTML = this.countries.map(country => `
             <div class="country-card" data-country="${country.code}" onclick="app.selectCountry('${country.code}')">
-                <img src="https://flagcdn.com/w80/${country.code}.png" alt="${country.name}" class="country-flag">
+                <img src="https://flagcdn.com/w80/${country.code}.png" 
+                     alt="${country.name}" 
+                     class="country-flag"
+                     onerror="this.style.display='none'">
                 <div class="country-name">${country.name}</div>
-                <div class="country-price">${country.price}</div>
+                <div class="country-available">${country.availableNumbers || 0} numbers</div>
             </div>
         `).join('');
     }
@@ -131,21 +156,43 @@ class TempNumberApp {
         this.showToast(`Selected ${service}`, 'success');
     }
 
-    loadNumbers(countryCode) {
+    async loadNumbers(countryCode) {
         const country = this.countries.find(c => c.code === countryCode);
+        if (!country) {
+            this.showToast('Country not found', 'error');
+            return;
+        }
+
+        this.selectedCountry = countryCode;
+
+        // Get service price if available
+        let price = '$0.50'; // Default price
+        if (this.selectedService && this.services.length > 0) {
+            const service = this.services.find(s => s.id === this.selectedService);
+            if (service) {
+                price = `$${service.price.toFixed(2)}`;
+            }
+        }
+        
         const numbers = this.generateMockNumbers(countryCode, 5);
         
         const numberList = document.getElementById('numberList');
+        if (!numberList) return;
+        
         numberList.innerHTML = numbers.map(number => `
-            <div class="number-card" onclick="app.selectNumber('${number.number}', '${country.name}', '${country.price}')">
+            <div class="number-card" onclick="app.selectNumber('${number.number}', '${country.name}', '${price}')">
                 <div class="number-display">
-                    <img src="https://flagcdn.com/w40/${countryCode}.png" alt="${country.name}" class="country-flag" style="width: 32px; height: 24px;">
+                    <img src="https://flagcdn.com/w40/${countryCode}.png" 
+                         alt="${country.name}" 
+                         class="country-flag" 
+                         style="width: 32px; height: 24px;"
+                         onerror="this.style.display='none'">
                     <div>
                         <div class="number-text">${number.number}</div>
                         <div class="number-country">${country.name}</div>
                     </div>
                 </div>
-                <div class="number-price">${country.price}</div>
+                <div class="number-price">${price}</div>
             </div>
         `).join('');
 
