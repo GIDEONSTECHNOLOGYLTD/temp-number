@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temp Number - Real-Time SMS Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="background-animation"></div>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/">Temp Number</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero">
+            <h1>Welcome to Your Real-Time SMS Dashboard</h1>
+            <p>Monitor incoming messages on public numbers instantly.</p>
+        </section>
+
+        <section id="dashboard">
+            <div class="container">
+                <div class="phone-numbers">
+                    <h2>Public Phone Numbers</h2>
+                    <ul id="phone-numbers-list">
+                        <!-- Phone numbers will be dynamically inserted here -->
+                    </ul>
+                </div>
+                <div class="sms-feed">
+                    <h2>Live SMS Feed</h2>
+                    <div id="sms-messages-container">
+                        <ul id="sms-messages-list">
+                            <!-- SMS messages will be dynamically inserted here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Temp Number. All rights reserved.</p>
+    </footer>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

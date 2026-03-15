@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - TempSMS Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --dark-lighter: #334155;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-glow: 0 0 40px -10px var(--primary);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-gradient-1 {
+            background: var(--primary);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        .bg-gradient-2 {
+            background: var(--secondary);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: -5s;
+        }
+
+        .bg-gradient-3 {
+            background: var(--accent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(20px, 30px) scale(1.05); }
+        }
+
+        /* Grid Pattern Overlay */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 8px 20px -8px var(--primary);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-lg);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .auth-container {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 480px;
+            gap: 60px;
+            padding: 120px 60px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Left Side - Info */
+        .auth-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 40px;
+        }
+
+        .auth-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin-bottom: 24px;
+            width: fit-content;
+        }
+
+        .auth-badge i {
+            font-size: 12px;
+        }
+
+        .auth-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .auth-title .gradient {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-subtitle {
+            font-size: 18px;
+            color: var(--gray-400);
+            line-height: 1.7;
+            margin-bottom: 40px;
+            max-width: 480px;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateX(8px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .feature-content p {
+            font-size: 14px;
+            color: var(--gray-400);
+            line-height: 1.5;
+        }
+
+        /* Right Side - Form */
+        .auth-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-header p {
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        /* Tabs */
+        .auth-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+            padding: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: var(--radius-lg);
+        }
+
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--gray-400);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px -4px var(--primary);
+        }
+
+        .tab-btn:not(.active):hover {
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-300);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0,0,0,0.4);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-500);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-size: 16px;
+        }
+
+        /* Phone Input */
+        .phone-input {
+            display: flex;
+            gap: 12px;
+        }
+
+        .country-select {
+            width: 100px;
+            padding: 14px 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .country-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .country-select option {
+            background: var(--dark);
+            color: white;
+        }
+
+        /* Password Strength */
+        .password-strength {
+            margin-top: 12px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-wrapper input:checked + .checkmark {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkmark i {
+            font-size: 12px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .checkbox-wrapper input:checked + .checkmark i {
+            opacity: 1;
+        }
+
+        .checkbox-text {
+            font-size: 13px;
+            color: var(--gray-400);
+            line-height: 1.5;
+        }
+
+        .checkbox-text a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .checkbox-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .auth-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 24px;
+            box-shadow: 0 8px 20px -8px var(--primary);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -8px var(--primary);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+            color: var(--gray-500);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Social Login */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.google:hover { border-color: #ea4335; color: #ea4335; }
+        .social-btn.facebook:hover { border-color: #1877f2; color: #1877f2; }
+        .social-btn.twitter:hover { border-color: #1da1f2; color: #1da1f2; }
+        .social-btn.github:hover { border-color: #ffffff; }
+
+        /* Footer */
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .auth-footer p {
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        .auth-footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-content h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .loading-content p {
+            color: var(--gray-400);
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 24px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success { border-left: 3px solid var(--success); }
+        .toast.error { border-left: 3px solid var(--error); }
+        .toast.warning { border-left: 3px solid var(--warning); }
+
+        .toast i {
+            font-size: 18px;
+        }
+
+        .toast.success i { color: var(--success); }
+        .toast.error i { color: var(--error); }
+        .toast.warning i { color: var(--warning); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 100px 24px 40px;
+            }
+
+            .auth-info {
+                text-align: center;
+                padding-right: 0;
+            }
+
+            .auth-title {
+                font-size: 40px;
+            }
+
+            .auth-badge {
+                margin: 0 auto 24px;
+            }
+
+            .features-list {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .auth-card {
+                max-width: 480px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .navbar {
+                padding: 16px 20px;
+            }
+
+            .auth-container {
+                padding: 90px 16px 24px;
+            }
+
+            .auth-title {
+                font-size: 32px;
+            }
+
+            .auth-card {
+                padding: 24px;
+            }
+
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                font-size: 13px;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="bg-gradient bg-gradient-1"></div>
+        <div class="bg-gradient bg-gradient-2"></div>
+        <div class="bg-gradient bg-gradient-3"></div>
+    </div>
+    <div class="bg-grid"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <span class="logo-text">Temp<span>SMS</span></span>
+            </a>
+            <button class="nav-btn" onclick="switchToLogin()">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="auth-container">
+        <!-- Left Side - Info -->
+        <div class="auth-info">
+            <div class="auth-badge">
+                <i class="fas fa-star"></i>
+                Trusted by 50,000+ Users
+            </div>
+            <h1 class="auth-title">
+                Get SMS Codes<br>
+                <span class="gradient">Instantly & Securely</span>
+            </h1>
+            <p class="auth-subtitle">
+                Create your account to access temporary phone numbers from 50+ countries. 
+                Perfect for verifications, sign-ups, and protecting your privacy.
+            </p>
+
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Bank-Grade Security</h4>
+                        <p>End-to-end encryption with automatic message deletion after 24 hours</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Global Coverage</h4>
+                        <p>Numbers from USA, UK, Germany, France, and 50+ more countries</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Lightning Fast</h4>
+                        <p>Receive SMS in under 10 seconds with real-time notifications</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Pay Per Use</h4>
+                        <p>Starting from $0.15 per SMS with bonus credits on every deposit</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Join thousands of users worldwide</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="email">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </button>
+                <button class="tab-btn" data-tab="phone">
+                    <i class="fas fa-phone"></i>
+                    Phone
+                </button>
+                <button class="tab-btn" data-tab="social">
+                    <i class="fas fa-share-alt"></i>
+                    Social
+                </button>
+            </div>
+
+            <div class="auth-content">
+                <!-- Email Tab -->
+                <div class="tab-content active" id="email-tab">
+                    <form id="emailForm" class="auth-form">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="email" class="form-input" placeholder="name@example.com" required>
+                                <i class="fas fa-envelope input-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                            <div class="password-strength" id="passwordStrength"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="terms" required>
+                                <span class="checkmark">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span class="checkbox-text">
+                                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-user-plus"></i>
+                            Create Account
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Phone Tab -->
+                <div class="tab-content" id="phone-tab">
+                    <form id="phoneForm" class="auth-form">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <div class="phone-input">
+                                <select id="countryCode" class="country-select">
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+49">🇩🇪 +49</option>
+                                    <option value="+33">🇫🇷 +33</option>
+                                    <option value="+39">🇮🇹 +39</option>
+                                    <option value="+34">🇪🇸 +34</option>
+                                </select>
+                                <input type="tel" id="phoneNumber" class="form-input" placeholder="Enter phone number" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="phonePassword" class="form-input" placeholder="Create a password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="phoneTerms" required>
+                                <span class="checkmark">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span class="checkbox-text">
+                                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-mobile-alt"></i>
+                            Verify & Continue
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Social Tab -->
+                <div class="tab-content" id="social-tab">
+                    <div class="social-grid">
+                        <button class="social-btn google" onclick="signUpWithGoogle()">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                        <button class="social-btn facebook" onclick="signUpWithFacebook()">
+                            <i class="fab fa-facebook-f"></i>
+                            Facebook
+                        </button>
+                        <button class="social-btn twitter" onclick="signUpWithTwitter()">
+                            <i class="fab fa-twitter"></i>
+                            Twitter
+                        </button>
+                        <button class="social-btn github" onclick="signUpWithGithub()">
+                            <i class="fab fa-github"></i>
+                            GitHub
+                        </button>
+                    </div>
+
+                    <div class="divider">or continue with email</div>
+
+                    <button class="auth-btn" onclick="switchTab('email')">
+                        <i class="fas fa-envelope"></i>
+                        Sign up with Email
+                    </button>
+                </div>
+            </div>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Please wait...</h3>
+            <p id="loadingText">Creating your account</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="auth-script.js"></script>
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        // Login/Register toggle
+        let isLoginMode = false;
+        
+        function switchToLogin() {
+            isLoginMode = !isLoginMode;
+            
+            if (!isLoginMode) {
+                // Show register
+                document.querySelector('.auth-header h2').textContent = 'Create Account';
+                document.querySelector('.auth-header p').textContent = 'Join thousands of users worldwide';
+                document.querySelector('.nav-btn').innerHTML = '<i class="fas fa-sign-in-alt"></i>Sign In';
+                document.querySelector('.auth-footer p').innerHTML = 'Already have an account? <a href="#" onclick="switchToLogin()">Sign in here</a>';
+                document.querySelector('.auth-tabs').style.display = 'flex';
+                
+                // Show register form
+                document.getElementById('email-tab').classList.add('active');
+                document.getElementById('phone-tab').classList.remove('active');
+                document.getElementById('social-tab').classList.remove('active');
+                
+                // Restore original forms
+                document.getElementById('email-tab').innerHTML = `
+                    <form id="emailForm" class="auth-form">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="email" class="form-input" placeholder="name@example.com" required>
+                                <i class="fas fa-envelope input-icon"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="password" class="form-input" placeholder="Create a strong password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                            <div class="password-strength" id="passwordStrength"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="terms" required>
+                                <span class="checkmark"><i class="fas fa-check"></i></span>
+                                <span class="checkbox-text">I agree to the <a href="#">Terms</a> and <a href="#">Privacy</a></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-user-plus"></i>Create Account
+                        </button>
+                    </form>
+                `;
+                
+                switchTab('email');
+            } else {
+                // Show login
+                document.querySelector('.auth-header h2').textContent = 'Welcome Back';
+                document.querySelector('.auth-header p').textContent = 'Sign in to access your account';
+                document.querySelector('.nav-btn').innerHTML = '<i class="fas fa-user-plus"></i>Create Account';
+                document.querySelector('.auth-footer p').innerHTML = 'Don\'t have an account? <a href="#" onclick="switchToLogin()">Create one</a>';
+                document.querySelector('.auth-tabs').style.display = 'none';
+                
+                // Hide all tabs
+                document.getElementById('email-tab').classList.add('active');
+                document.getElementById('phone-tab').classList.remove('active');
+                document.getElementById('social-tab').classList.remove('active');
+                
+                // Show login form
+                document.getElementById('email-tab').innerHTML = `
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="loginEmail" class="form-input" placeholder="name@example.com" required>
+                                <i class="fas fa-envelope input-icon"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required>
+                                <i class="fas fa-lock input-icon"></i>
+                            </div>
+                        </div>
+                        <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="remember">
+                                <span class="checkmark"><i class="fas fa-check"></i></span>
+                                <span class="checkbox-text">Remember me</span>
+                            </label>
+                            <a href="#" style="font-size: 13px; color: var(--primary-light); text-decoration: none;">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="auth-btn">
+                            <i class="fas fa-sign-in-alt"></i>Sign In
+                        </button>
+                    </form>
+                `;
+            }
+        }
+
+        // Tab click handlers
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+    </script>
+</body>
+</html>

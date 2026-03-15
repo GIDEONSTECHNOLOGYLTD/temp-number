@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Funds - TempSMS Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--dark);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.2;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .bg-gradient-1 { background: var(--primary); top: -100px; right: -100px; }
+        .bg-gradient-2 { background: var(--secondary); bottom: -100px; left: -100px; animation-delay: -8s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -20px) scale(1.1); }
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 40px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 8px 20px -8px var(--primary);
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .logo-text span {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-items {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 40px 40px;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 20px;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 40px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .section-title .gradient {
+            background: linear-gradient(135deg, var(--success), #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--gray-400);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Funds Container */
+        .funds-container {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 40px;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-400);
+            margin-bottom: 16px;
+        }
+
+        .payment-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .payment-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .payment-card.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px -10px var(--primary);
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .payment-card.active .payment-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .payment-desc {
+            font-size: 13px;
+            color: var(--gray-400);
+        }
+
+        .payment-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .payment-card.active .payment-check {
+            opacity: 1;
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Amount Section */
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .amount-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 24px 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .amount-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .amount-card.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px -10px var(--primary);
+        }
+
+        .amount-value {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .amount-bonus {
+            font-size: 12px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .amount-card.custom {
+            grid-column: span 3;
+        }
+
+        .custom-input-wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .custom-input-wrapper span {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--gray-400);
+        }
+
+        .custom-amount {
+            flex: 1;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            text-align: center;
+            outline: none;
+        }
+
+        .custom-amount::placeholder {
+            color: var(--gray-500);
+            font-size: 16px;
+        }
+
+        /* Payment Form */
+        .payment-form-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 100px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 12px 0;
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .summary-row.total .amount {
+            color: var(--success);
+            font-size: 24px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-400);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0,0,0,0.4);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-500);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Pay Button */
+        .pay-button {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--success), #059669);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+            box-shadow: 0 8px 20px -8px var(--success);
+        }
+
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -8px var(--success);
+        }
+
+        .pay-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .security-badge i {
+            color: var(--success);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 24px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .toast.success { border-left: 3px solid var(--success); }
+        .toast.error { border-left: 3px solid var(--error); }
+
+        .toast i {
+            font-size: 18px;
+        }
+
+        .toast.success i { color: var(--success); }
+        .toast.error i { color: var(--error); }
+
+        /* Crypto Options */
+        .crypto-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .crypto-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .crypto-option:hover {
+            border-color: var(--primary);
+        }
+
+        .crypto-option.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+        }
+
+        .crypto-option i {
+            font-size: 24px;
+        }
+
+        .crypto-option.bitcoin i { color: #f7931a; }
+        .crypto-option.ethereum i { color: #627eea; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .funds-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .payment-form-card {
+                position: static;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .amount-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .amount-card.custom {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .navbar {
+                padding: 12px 16px;
+            }
+
+            .app-container {
+                padding: 100px 16px 24px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .amount-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .payment-form-card {
+                padding: 24px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .crypto-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="bg-gradient bg-gradient-1"></div>
+        <div class="bg-gradient bg-gradient-2"></div>
+    </div>
+    <div class="bg-grid"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/app" class="nav-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <span class="logo-text">Temp<span>SMS</span></span>
+            </a>
+            <div class="nav-items">
+                <button class="nav-btn" onclick="window.location.href='/app'">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="app-container">
+        <div class="section-header">
+            <div class="section-badge">
+                <i class="fas fa-wallet"></i>
+                Secure Payment
+            </div>
+            <h1 class="section-title">
+                Add <span class="gradient">Funds</span>
+            </h1>
+            <p class="section-subtitle">
+                Choose your preferred payment method and amount. 
+                Get bonus credits on every deposit!
+            </p>
+        </div>
+
+        <div class="funds-container">
+            <!-- Left Column - Payment Methods -->
+            <div class="payment-methods">
+                <div>
+                    <div class="section-label">Payment Method</div>
+                    <div class="payment-grid">
+                        <div class="payment-card active" data-method="card" onclick="selectMethod('card')">
+                            <div class="payment-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="payment-info">
+                                <div class="payment-name">Credit Card</div>
+                                <div class="payment-desc">Visa, Mastercard, Amex</div>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+
+                        <div class="payment-card" data-method="paypal" onclick="selectMethod('paypal')">
+                            <div class="payment-icon" style="color: #0070ba;">
+                                <i class="fab fa-paypal"></i>
+                            </div>
+                            <div class="payment-info">
+                                <div class="payment-name">PayPal</div>
+                                <div class="payment-desc">Fast & secure checkout</div>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+
+                        <div class="payment-card" data-method="crypto" onclick="selectMethod('crypto')">
+                            <div class="payment-icon" style="color: #f7931a;">
+                                <i class="fab fa-bitcoin"></i>
+                            </div>
+                            <div class="payment-info">
+                                <div class="payment-name">Cryptocurrency</div>
+                                <div class="payment-desc">BTC, ETH & more</div>
+                            </div>
+                            <div class="payment-check">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-label">Select Amount</div>
+                    <div class="amount-grid">
+                        <div class="amount-card" data-amount="5" onclick="selectAmount(5)">
+                            <span class="amount-value">$5</span>
+                            <span class="amount-bonus">+$0.50</span>
+                        </div>
+                        <div class="amount-card" data-amount="10" onclick="selectAmount(10)">
+                            <span class="amount-value">$10</span>
+                            <span class="amount-bonus">+$1.00</span>
+                        </div>
+                        <div class="amount-card active" data-amount="25" onclick="selectAmount(25)">
+                            <span class="amount-value">$25</span>
+                            <span class="amount-bonus">+$3.00</span>
+                        </div>
+                        <div class="amount-card" data-amount="50" onclick="selectAmount(50)">
+                            <span class="amount-value">$50</span>
+                            <span class="amount-bonus">+$7.50</span>
+                        </div>
+                        <div class="amount-card" data-amount="100" onclick="selectAmount(100)">
+                            <span class="amount-value">$100</span>
+                            <span class="amount-bonus">+$20.00</span>
+                        </div>
+                        <div class="amount-card custom" data-amount="custom" onclick="selectAmount('custom')">
+                            <div class="custom-input-wrapper">
+                                <span>$</span>
+                                <input type="number" class="custom-amount" placeholder="Custom Amount" min="1" max="1000" oninput="updateCustomAmount(this.value)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Payment Form -->
+            <div class="payment-form">
+                <div class="payment-form-card">
+                    <div class="form-header">
+                        <h3 class="form-title">Payment Summary</h3>
+                        <p class="form-subtitle">Complete your deposit securely</p>
+                    </div>
+
+                    <div class="summary-box">
+                        <div class="summary-row">
+                            <span>Deposit Amount</span>
+                            <span id="summaryAmount">$25.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Bonus Credit</span>
+                            <span id="summaryBonus" style="color: var(--success);">+$3.00</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total">
+                            <span>Total Credit</span>
+                            <span class="amount" id="summaryTotal">$28.00</span>
+                        </div>
+                    </div>
+
+                    <form id="paymentForm" onsubmit="processPayment(event)">
+                        <div id="cardForm">
+                            <div class="form-group">
+                                <label class="form-label">Card Number</label>
+                                <input type="text" id="cardNumber" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="text" id="expiryDate" class="form-input" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" id="cvv" class="form-input" placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Cardholder Name</label>
+                                <input type="text" id="cardName" class="form-input" placeholder="John Doe">
+                            </div>
+                        </div>
+
+                        <div id="paypalForm" style="display: none; text-align: center; padding: 40px 0;">
+                            <i class="fab fa-paypal" style="font-size: 64px; color: #0070ba; margin-bottom: 20px;"></i>
+                            <p style="color: var(--gray-400); margin-bottom: 24px;">You will be redirected to PayPal to complete your payment securely.</p>
+                        </div>
+
+                        <div id="cryptoForm" style="display: none;">
+                            <div class="crypto-options">
+                                <div class="crypto-option bitcoin active" onclick="selectCrypto('bitcoin')">
+                                    <i class="fab fa-bitcoin"></i>
+                                    <span>Bitcoin</span>
+                                </div>
+                                <div class="crypto-option ethereum" onclick="selectCrypto('ethereum')">
+                                    <i class="fab fa-ethereum"></i>
+                                    <span>Ethereum</span>
+                                </div>
+                            </div>
+                            <p style="text-align: center; color: var(--gray-400); font-size: 14px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: var(--radius-md);">
+                                <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
+                                You will receive a wallet address after clicking Pay
+                            </p>
+                        </div>
+
+                        <button type="submit" class="pay-button">
+                            <i class="fas fa-lock"></i>
+                            <span id="payButtonText">Pay $25.00</span>
+                        </button>
+                    </form>
+
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>256-bit SSL Encryption | PCI Compliant</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Processing Payment...</h3>
+            <p>Please wait while we secure your transaction</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="funds-script.js"></script>
+    <script>
+        let selectedMethod = 'card';
+        let selectedAmount = 25;
+        let customAmount = null;
+        let selectedCrypto = 'bitcoin';
+
+        const bonusRates = {
+            5: 0.50,
+            10: 1.00,
+            25: 3.00,
+            50: 7.50,
+            100: 20.00
+        };
+
+        function selectMethod(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('active'));
+            document.querySelector(`[data-method="${method}"]`).classList.add('active');
+
+            // Show/hide relevant form
+            document.getElementById('cardForm').style.display = method === 'card' ? 'block' : 'none';
+            document.getElementById('paypalForm').style.display = method === 'paypal' ? 'block' : 'none';
+            document.getElementById('cryptoForm').style.display = method === 'crypto' ? 'block' : 'none';
+
+            updateSummary();
+        }
+
+        function selectAmount(amount) {
+            selectedAmount = amount;
+            document.querySelectorAll('.amount-card').forEach(card => card.classList.remove('active'));
+            document.querySelector(`[data-amount="${amount}"]`).classList.add('active');
+            
+            if (amount === 'custom') {
+                document.querySelector('.custom-amount').focus();
+            }
+            
+            updateSummary();
+        }
+
+        function updateCustomAmount(value) {
+            customAmount = parseFloat(value) || 0;
+            updateSummary();
+        }
+
+        function selectCrypto(crypto) {
+            selectedCrypto = crypto;
+            document.querySelectorAll('.crypto-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector(`.crypto-option.${crypto}`).classList.add('active');
+        }
+
+        function updateSummary() {
+            let amount, bonus;
+            
+            if (selectedAmount === 'custom') {
+                amount = customAmount || 0;
+                bonus = amount * 0.1; // 10% bonus for custom
+            } else {
+                amount = selectedAmount;
+                bonus = bonusRates[amount] || 0;
+            }
+            
+            const total = amount + bonus;
+            
+            document.getElementById('summaryAmount').textContent = `$${amount.toFixed(2)}`;
+            document.getElementById('summaryBonus').textContent = `+$${bonus.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('payButtonText').textContent = selectedMethod === 'crypto' ? 'Generate Address' : `Pay $${amount.toFixed(2)}`;
+        }
+
+        function processPayment(e) {
+            e.preventDefault();
+            
+            let amount = selectedAmount === 'custom' ? (customAmount || 0) : selectedAmount;
+            
+            if (amount < 5) {
+                showToast('Minimum deposit amount is $5', 'error');
+                return;
+            }
+
+            document.getElementById('loadingOverlay').classList.add('active');
+            
+            // Simulate API call
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+                showToast('Payment processed successfully!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = '/app';
+                }, 1500);
+            }, 2000);
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? 'check-circle' : 'exclamation-circle';
+            toast.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.5s ease forwards';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSummary();
+            
+            // Card number formatting
+            document.getElementById('cardNumber')?.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+                let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                e.target.value = formattedValue;
+            });
+
+            // Expiry formatting
+            document.getElementById('expiryDate')?.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+            });
+
+            // CVV formatting
+            document.getElementById('cvv')?.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        });
+    </script>
+</body>
+</html>
