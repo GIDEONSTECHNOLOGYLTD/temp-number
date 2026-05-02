@@ -8,12 +8,16 @@ const morgan = require('morgan');
 const winston = require('winston');
 require('dotenv').config();
 
+const connectDB = require('./config/db');
+
 const Database = require('./database');
 const { router: authRoutes, authenticateToken } = require('./routes/auth');
 const activationRoutes = require('./routes/activations');
 const userRoutes = require('./routes/user');
 const serviceRoutes = require('./routes/services');
 const webhookRoutes = require('./routes/webhooks');
+const paymentRoutes = require('./routes/payments');
+const adminRoutes = require('./routes/admin');
 
 // Logger setup
 const logger = winston.createLogger({
@@ -82,6 +86,8 @@ app.use('/api/activations', activationRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/webhooks', webhookRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // App routes
 app.get('/', (req, res) => {
@@ -98,6 +104,10 @@ app.get('/app/', (req, res) => {
 
 app.get('/dashboard', (req, res) => {
   res.sendFile(__dirname + '/public/dashboard.html');
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(__dirname + '/public/admin.html');
 });
 
 app.get('/app/funds', (req, res) => {
@@ -164,10 +174,19 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-server.listen(PORT, () => {
-  logger.info(`🚀 TempSMS Pro running on port ${PORT}`);
-  logger.info(`📱 Access: http://localhost:${PORT}`);
-  logger.info(`🔌 WebSocket enabled for real-time updates`);
+const startServer = async () => {
+  await connectDB();
+  await db.init();
+  server.listen(PORT, () => {
+    logger.info(`🚀 TempSMS Pro running on port ${PORT}`);
+    logger.info(`📱 Access: http://localhost:${PORT}`);
+    logger.info(`🔌 WebSocket enabled for real-time updates`);
+  });
+};
+
+startServer().catch((err) => {
+  logger.error('Failed to start server:', err);
+  process.exit(1);
 });
 
 module.exports = { app, server, io };

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - TempSMS Pro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--primary:#6366f1;--primary-dark:#4f46e5;--dark:#0f172a;--dark-light:#1e293b;--dark-lighter:#334155;--gray-400:#94a3b8;--gray-500:#64748b;--success:#10b981;--error:#ef4444;--warning:#f59e0b;--radius:12px}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;min-height:100vh;display:flex}
+    .sidebar{width:240px;background:var(--dark-light);border-right:1px solid var(--dark-lighter);display:flex;flex-direction:column;padding:24px 0;flex-shrink:0;position:fixed;height:100vh;overflow-y:auto}
+    .logo{padding:0 20px 24px;border-bottom:1px solid var(--dark-lighter);margin-bottom:16px}
+    .logo span{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--primary),#ec4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .logo p{font-size:11px;color:var(--gray-400);margin-top:2px}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;cursor:pointer;color:var(--gray-400);font-size:14px;font-weight:500;transition:.2s;border-left:3px solid transparent}
+    .nav-item:hover{background:rgba(99,102,241,.1);color:#fff}
+    .nav-item.active{background:rgba(99,102,241,.15);color:var(--primary);border-left-color:var(--primary)}
+    .nav-item i{width:18px;text-align:center}
+    .main{margin-left:240px;flex:1;padding:32px;overflow-y:auto}
+    .page{display:none}.page.active{display:block}
+    h1{font-size:22px;font-weight:700;margin-bottom:4px}
+    .subtitle{color:var(--gray-400);font-size:14px;margin-bottom:28px}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+    .stat-card{background:var(--dark-light);border:1px solid var(--dark-lighter);border-radius:var(--radius);padding:20px}
+    .stat-card .label{font-size:12px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+    .stat-card .value{font-size:28px;font-weight:700}
+    .stat-card .value.green{color:var(--success)}
+    .stat-card .value.blue{color:var(--primary)}
+    .stat-card .value.yellow{color:var(--warning)}
+    .card{background:var(--dark-light);border:1px solid var(--dark-lighter);border-radius:var(--radius);padding:20px;margin-bottom:24px}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .card-header h3{font-size:15px;font-weight:600}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{text-align:left;padding:10px 12px;color:var(--gray-400);font-weight:500;border-bottom:1px solid var(--dark-lighter);font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+    td{padding:10px 12px;border-bottom:1px solid rgba(51,65,85,.5);vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:rgba(99,102,241,.04)}
+    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+    .badge.success{background:rgba(16,185,129,.15);color:var(--success)}
+    .badge.error{background:rgba(239,68,68,.15);color:var(--error)}
+    .badge.warning{background:rgba(245,158,11,.15);color:var(--warning)}
+    .badge.info{background:rgba(99,102,241,.15);color:var(--primary)}
+    .badge.gray{background:rgba(148,163,184,.1);color:var(--gray-400)}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:500;transition:.2s}
+    .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+    .btn-danger{background:rgba(239,68,68,.15);color:var(--error);border:1px solid rgba(239,68,68,.2)}.btn-danger:hover{background:rgba(239,68,68,.25)}
+    .btn-success{background:rgba(16,185,129,.15);color:var(--success);border:1px solid rgba(16,185,129,.2)}.btn-success:hover{background:rgba(16,185,129,.25)}
+    .btn-sm{padding:4px 10px;font-size:12px}
+    .btn-icon{background:none;border:none;cursor:pointer;color:var(--gray-400);padding:4px;border-radius:6px;transition:.2s}.btn-icon:hover{color:#fff;background:var(--dark-lighter)}
+    input,select{background:var(--dark-lighter);border:1px solid rgba(99,102,241,.2);color:#fff;padding:9px 12px;border-radius:8px;font-size:13px;width:100%;outline:none;font-family:inherit}
+    input:focus,select:focus{border-color:var(--primary)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .form-row.three{grid-template-columns:1fr 1fr 1fr}
+    label{display:block;font-size:12px;color:var(--gray-400);margin-bottom:4px}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--dark-light);border:1px solid var(--dark-lighter);border-radius:16px;padding:28px;width:100%;max-width:460px}
+    .modal h3{font-size:17px;font-weight:600;margin-bottom:20px}
+    .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+    .search-bar{display:flex;gap:10px;margin-bottom:16px}
+    .search-bar input{max-width:280px}
+    .pagination{display:flex;gap:8px;align-items:center;margin-top:16px;font-size:13px}
+    .page-btn{background:var(--dark-lighter);border:none;color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer}.page-btn:disabled{opacity:.4;cursor:default}.page-btn.active{background:var(--primary)}
+    .empty{text-align:center;padding:48px;color:var(--gray-500)}
+    .empty i{font-size:36px;margin-bottom:12px;display:block}
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--dark-lighter);border:1px solid var(--dark-lighter);padding:12px 20px;border-radius:10px;font-size:13px;z-index:999;transform:translateY(100px);opacity:0;transition:.3s}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.success{border-color:var(--success);color:var(--success)}
+    .toast.error{border-color:var(--error);color:var(--error)}
+    @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px;padding:20px}}
+  </style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">
+    <span>TempSMS Pro</span>
+    <p>Admin Panel</p>
+  </div>
+  <div class="nav-item active" data-page="overview"><i class="fas fa-chart-line"></i> Overview</div>
+  <div class="nav-item" data-page="users"><i class="fas fa-users"></i> Users</div>
+  <div class="nav-item" data-page="numbers"><i class="fas fa-mobile-alt"></i> Phone Numbers</div>
+  <div class="nav-item" data-page="services"><i class="fas fa-th-large"></i> Services</div>
+  <div class="nav-item" data-page="activations"><i class="fas fa-bolt"></i> Activations</div>
+  <div style="margin-top:auto;padding:20px">
+    <div class="nav-item" id="logoutBtn" style="border-radius:8px"><i class="fas fa-sign-out-alt"></i> Logout</div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- Overview -->
+  <section class="page active" id="page-overview">
+    <h1>Dashboard</h1>
+    <p class="subtitle">Platform overview and recent activity</p>
+    <div class="stats-grid" id="statsGrid"></div>
+    <div class="card">
+      <div class="card-header"><h3>Recent Activations</h3></div>
+      <table><thead><tr><th>User</th><th>Number</th><th>Service</th><th>Status</th><th>Time</th></tr></thead>
+      <tbody id="recentActivationsTable"></tbody></table>
+    </div>
+  </section>
+
+  <!-- Users -->
+  <section class="page" id="page-users">
+    <h1>Users</h1>
+    <p class="subtitle">Manage all user accounts</p>
+    <div class="search-bar">
+      <input type="text" id="userSearch" placeholder="Search by email or name...">
+      <button class="btn btn-primary" onclick="loadUsers()"><i class="fas fa-search"></i> Search</button>
+    </div>
+    <div class="card">
+      <table><thead><tr><th>Name / Email</th><th>Balance</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+      <tbody id="usersTable"></tbody></table>
+      <div class="pagination" id="usersPagination"></div>
+    </div>
+  </section>
+
+  <!-- Phone Numbers -->
+  <section class="page" id="page-numbers">
+    <h1>Phone Numbers</h1>
+    <p class="subtitle">Manage the phone number pool</p>
+    <div class="card-header" style="margin-bottom:16px">
+      <button class="btn btn-primary" onclick="openAddNumberModal()"><i class="fas fa-plus"></i> Add Number</button>
+    </div>
+    <div class="card">
+      <table><thead><tr><th>Number</th><th>Country</th><th>Code</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="numbersTable"></tbody></table>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="page" id="page-services">
+    <h1>Services</h1>
+    <p class="subtitle">Manage available services and pricing</p>
+    <div class="card-header" style="margin-bottom:16px">
+      <button class="btn btn-primary" onclick="openAddServiceModal()"><i class="fas fa-plus"></i> Add Service</button>
+    </div>
+    <div class="card">
+      <table><thead><tr><th>ID</th><th>Name</th><th>Price (USD)</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="servicesTable"></tbody></table>
+    </div>
+  </section>
+
+  <!-- Activations -->
+  <section class="page" id="page-activations">
+    <h1>Activations</h1>
+    <p class="subtitle">All platform activations</p>
+    <div class="search-bar">
+      <select id="activationStatusFilter" onchange="loadActivations()" style="width:180px">
+        <option value="">All Statuses</option>
+        <option value="smsRequested">SMS Requested</option>
+        <option value="smsReceived">SMS Received</option>
+        <option value="retryRequested">Retry Requested</option>
+        <option value="expired">Expired</option>
+      </select>
+    </div>
+    <div class="card">
+      <table><thead><tr><th>User</th><th>Number</th><th>Service</th><th>Status</th><th>Code</th><th>Time</th></tr></thead>
+      <tbody id="activationsTable"></tbody></table>
+      <div class="pagination" id="activationsPagination"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Modals -->
+<div class="modal-overlay" id="balanceModal">
+  <div class="modal">
+    <h3>Adjust Balance</h3>
+    <input type="hidden" id="balanceUserId">
+    <div style="margin-bottom:12px"><label>New Balance (USD)</label><input type="number" id="balanceAmount" step="0.01" min="0"></div>
+    <div style="margin-bottom:12px"><label>Reason</label><input type="text" id="balanceReason" placeholder="Reason for adjustment"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('balanceModal')" style="background:var(--dark-lighter)">Cancel</button>
+      <button class="btn btn-primary" onclick="submitBalance()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addNumberModal">
+  <div class="modal">
+    <h3>Add Phone Number</h3>
+    <div style="margin-bottom:12px"><label>Phone Number (E.164 format)</label><input type="text" id="newNumber" placeholder="+12025551001"></div>
+    <div class="form-row">
+      <div><label>Country Code</label><input type="text" id="newCountryCode" placeholder="US" maxlength="2"></div>
+      <div><label>Country Name</label><input type="text" id="newCountryName" placeholder="United States"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('addNumberModal')" style="background:var(--dark-lighter)">Cancel</button>
+      <button class="btn btn-primary" onclick="submitAddNumber()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addServiceModal">
+  <div class="modal">
+    <h3>Add Service</h3>
+    <div style="margin-bottom:12px"><label>Service ID (lowercase, no spaces)</label><input type="text" id="newServiceId" placeholder="e.g. netflix"></div>
+    <div class="form-row">
+      <div><label>Display Name</label><input type="text" id="newServiceName" placeholder="Netflix"></div>
+      <div><label>Price (USD)</label><input type="number" id="newServicePrice" step="0.01" min="0.01" placeholder="0.99"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('addServiceModal')" style="background:var(--dark-lighter)">Cancel</button>
+      <button class="btn btn-primary" onclick="submitAddService()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editServiceModal">
+  <div class="modal">
+    <h3>Edit Service</h3>
+    <input type="hidden" id="editServiceId">
+    <div style="margin-bottom:12px"><label>Display Name</label><input type="text" id="editServiceName"></div>
+    <div style="margin-bottom:12px"><label>Price (USD)</label><input type="number" id="editServicePrice" step="0.01" min="0.01"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('editServiceModal')" style="background:var(--dark-lighter)">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEditService()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api/admin';
+let token = localStorage.getItem('accessToken') || localStorage.getItem('token');
+
+if (!token) { window.location.href = '/app/create-account'; }
+
+async function apiFetch(path, options = {}) {
+  const res = await fetch(path, {
+    ...options,
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', ...(options.headers || {}) }
+  });
+  if (res.status === 401 || res.status === 403) { window.location.href = '/'; return null; }
+  return res.json();
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast show ${type}`;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// Navigation
+document.querySelectorAll('.nav-item[data-page]').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(`page-${el.dataset.page}`).classList.add('active');
+    loadPage(el.dataset.page);
+  });
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('accessToken'); localStorage.removeItem('token');
+  window.location.href = '/';
+});
+
+function loadPage(page) {
+  if (page === 'overview') loadStats();
+  else if (page === 'users') loadUsers();
+  else if (page === 'numbers') loadNumbers();
+  else if (page === 'services') loadServices();
+  else if (page === 'activations') loadActivations();
+}
+
+function statusBadge(status) {
+  const map = { smsReceived: 'success', smsRequested: 'info', retryRequested: 'warning', expired: 'gray', completed: 'success', failed: 'error', pending: 'warning' };
+  return `<span class="badge ${map[status] || 'gray'}">${status}</span>`;
+}
+
+function timeAgo(d) {
+  const s = Math.floor((Date.now() - new Date(d)) / 1000);
+  if (s < 60) return `${s}s ago`;
+  if (s < 3600) return `${Math.floor(s/60)}m ago`;
+  if (s < 86400) return `${Math.floor(s/3600)}h ago`;
+  return new Date(d).toLocaleDateString();
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+async function loadStats() {
+  const data = await apiFetch(`${API}/stats`);
+  if (!data) return;
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="label">Total Users</div><div class="value blue">${data.totalUsers.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Total Activations</div><div class="value">${data.totalActivations.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Active Numbers</div><div class="value blue">${data.totalNumbers.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Active Now</div><div class="value yellow">${data.activeActivations.toLocaleString()}</div></div>
+    <div class="stat-card"><div class="label">Total Revenue</div><div class="value green">$${data.totalRevenue.toFixed(2)}</div></div>`;
+
+  document.getElementById('recentActivationsTable').innerHTML = data.recentActivations.length
+    ? data.recentActivations.map(a => `<tr>
+        <td>${a.user || '—'}</td>
+        <td style="font-family:monospace;font-size:12px">${a.number || '—'}</td>
+        <td>${a.service || '—'}</td>
+        <td>${statusBadge(a.status)}</td>
+        <td>${timeAgo(a.created_at)}</td>
+      </tr>`).join('')
+    : `<tr><td colspan="5" class="empty"><i class="fas fa-bolt"></i>No activations yet</td></tr>`;
+}
+
+// ── Users ─────────────────────────────────────────────────────────────────────
+let usersPage = 1;
+async function loadUsers(page = 1) {
+  usersPage = page;
+  const search = document.getElementById('userSearch').value;
+  const data = await apiFetch(`${API}/users?page=${page}&limit=20&search=${encodeURIComponent(search)}`);
+  if (!data) return;
+
+  document.getElementById('usersTable').innerHTML = data.users.length
+    ? data.users.map(u => `<tr>
+        <td><div style="font-weight:500">${u.name}</div><div style="font-size:12px;color:var(--gray-400)">${u.email}</div></td>
+        <td>$${parseFloat(u.balance).toFixed(2)}</td>
+        <td>
+          ${u.isAdmin ? '<span class="badge info">Admin</span> ' : ''}
+          ${u.isBanned ? '<span class="badge error">Banned</span>' : '<span class="badge success">Active</span>'}
+          ${u.isVerified ? '' : '<span class="badge gray" style="margin-left:4px">Unverified</span>'}
+        </td>
+        <td style="font-size:12px;color:var(--gray-400)">${new Date(u.created_at).toLocaleDateString()}</td>
+        <td>
+          <button class="btn btn-sm" style="background:rgba(99,102,241,.15);color:var(--primary);border:none;margin-right:4px" onclick="openBalanceModal('${u.id}','${u.balance}')"><i class="fas fa-wallet"></i></button>
+          <button class="btn btn-sm ${u.isBanned ? 'btn-success' : 'btn-danger'}" onclick="toggleBan('${u.id}',${!u.isBanned})">${u.isBanned ? 'Unban' : 'Ban'}</button>
+        </td>
+      </tr>`).join('')
+    : `<tr><td colspan="5" class="empty"><i class="fas fa-users"></i>No users found</td></tr>`;
+
+  renderPagination('usersPagination', data.page, data.pages, loadUsers);
+}
+
+document.getElementById('userSearch').addEventListener('keydown', e => { if (e.key === 'Enter') loadUsers(); });
+
+function openBalanceModal(userId, balance) {
+  document.getElementById('balanceUserId').value = userId;
+  document.getElementById('balanceAmount').value = parseFloat(balance).toFixed(2);
+  document.getElementById('balanceReason').value = '';
+  openModal('balanceModal');
+}
+
+async function submitBalance() {
+  const userId = document.getElementById('balanceUserId').value;
+  const balance = document.getElementById('balanceAmount').value;
+  const reason = document.getElementById('balanceReason').value;
+  const data = await apiFetch(`${API}/users/${userId}/balance`, { method: 'PUT', body: JSON.stringify({ balance, reason }) });
+  if (data?.success) { showToast('Balance updated'); closeModal('balanceModal'); loadUsers(usersPage); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+async function toggleBan(userId, ban) {
+  const data = await apiFetch(`${API}/users/${userId}/ban`, { method: 'PUT', body: JSON.stringify({ ban }) });
+  if (data?.success) { showToast(ban ? 'User banned' : 'User unbanned'); loadUsers(usersPage); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+// ── Numbers ───────────────────────────────────────────────────────────────────
+async function loadNumbers() {
+  const data = await apiFetch(`${API}/numbers`);
+  if (!data) return;
+  document.getElementById('numbersTable').innerHTML = data.length
+    ? data.map(n => `<tr>
+        <td style="font-family:monospace">${n.number}</td>
+        <td>${n.country_name}</td>
+        <td><span class="badge gray">${n.country_code}</span></td>
+        <td>${n.is_active ? '<span class="badge success">Active</span>' : '<span class="badge gray">Inactive</span>'}</td>
+        <td>
+          <button class="btn btn-sm ${n.is_active ? 'btn-danger' : 'btn-success'}" onclick="toggleNumber('${n.id}',${!n.is_active})">${n.is_active ? 'Disable' : 'Enable'}</button>
+          <button class="btn btn-sm btn-danger" style="margin-left:4px" onclick="deleteNumber('${n.id}')"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`).join('')
+    : `<tr><td colspan="5" class="empty"><i class="fas fa-mobile-alt"></i>No numbers found</td></tr>`;
+}
+
+function openAddNumberModal() { document.getElementById('newNumber').value=''; document.getElementById('newCountryCode').value=''; document.getElementById('newCountryName').value=''; openModal('addNumberModal'); }
+
+async function submitAddNumber() {
+  const number = document.getElementById('newNumber').value.trim();
+  const country_code = document.getElementById('newCountryCode').value.trim().toUpperCase();
+  const country_name = document.getElementById('newCountryName').value.trim();
+  if (!number || !country_code || !country_name) return showToast('All fields required', 'error');
+  const data = await apiFetch(`${API}/numbers`, { method: 'POST', body: JSON.stringify({ number, country_code, country_name }) });
+  if (data?.id) { showToast('Number added'); closeModal('addNumberModal'); loadNumbers(); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+async function toggleNumber(id, is_active) {
+  const data = await apiFetch(`${API}/numbers/${id}`, { method: 'PUT', body: JSON.stringify({ is_active }) });
+  if (data?.success) { showToast(is_active ? 'Number enabled' : 'Number disabled'); loadNumbers(); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+async function deleteNumber(id) {
+  if (!confirm('Delete this number? This cannot be undone.')) return;
+  const data = await apiFetch(`${API}/numbers/${id}`, { method: 'DELETE' });
+  if (data?.success) { showToast('Number deleted'); loadNumbers(); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+// ── Services ──────────────────────────────────────────────────────────────────
+async function loadServices() {
+  const data = await apiFetch(`${API}/services`);
+  if (!data) return;
+  document.getElementById('servicesTable').innerHTML = data.length
+    ? data.map(s => `<tr>
+        <td style="font-family:monospace;font-size:12px">${s.id}</td>
+        <td style="font-weight:500">${s.name}</td>
+        <td>$${parseFloat(s.price).toFixed(2)}</td>
+        <td>${s.is_active ? '<span class="badge success">Active</span>' : '<span class="badge gray">Inactive</span>'}</td>
+        <td>
+          <button class="btn btn-sm" style="background:rgba(99,102,241,.15);color:var(--primary);border:none;margin-right:4px" onclick="openEditService('${s.id}','${s.name}','${s.price}')"><i class="fas fa-pen"></i> Edit</button>
+          <button class="btn btn-sm ${s.is_active ? 'btn-danger' : 'btn-success'}" onclick="toggleService('${s.id}',${!s.is_active})">${s.is_active ? 'Disable' : 'Enable'}</button>
+        </td>
+      </tr>`).join('')
+    : `<tr><td colspan="5" class="empty"><i class="fas fa-th-large"></i>No services</td></tr>`;
+}
+
+function openAddServiceModal() { document.getElementById('newServiceId').value=''; document.getElementById('newServiceName').value=''; document.getElementById('newServicePrice').value=''; openModal('addServiceModal'); }
+
+async function submitAddService() {
+  const id = document.getElementById('newServiceId').value.trim().toLowerCase();
+  const name = document.getElementById('newServiceName').value.trim();
+  const price = document.getElementById('newServicePrice').value;
+  if (!id || !name || !price) return showToast('All fields required', 'error');
+  const data = await apiFetch(`${API}/services`, { method: 'POST', body: JSON.stringify({ id, name, price }) });
+  if (data?.id) { showToast('Service added'); closeModal('addServiceModal'); loadServices(); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+function openEditService(id, name, price) {
+  document.getElementById('editServiceId').value = id;
+  document.getElementById('editServiceName').value = name;
+  document.getElementById('editServicePrice').value = parseFloat(price).toFixed(2);
+  openModal('editServiceModal');
+}
+
+async function submitEditService() {
+  const id = document.getElementById('editServiceId').value;
+  const name = document.getElementById('editServiceName').value;
+  const price = document.getElementById('editServicePrice').value;
+  const data = await apiFetch(`${API}/services/${id}`, { method: 'PUT', body: JSON.stringify({ name, price }) });
+  if (data?.success) { showToast('Service updated'); closeModal('editServiceModal'); loadServices(); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+async function toggleService(id, is_active) {
+  const data = await apiFetch(`${API}/services/${id}`, { method: 'PUT', body: JSON.stringify({ is_active }) });
+  if (data?.success) { showToast(is_active ? 'Service enabled' : 'Service disabled'); loadServices(); }
+  else showToast(data?.error || 'Failed', 'error');
+}
+
+// ── Activations ───────────────────────────────────────────────────────────────
+let activationsPage = 1;
+async function loadActivations(page = 1) {
+  activationsPage = page;
+  const status = document.getElementById('activationStatusFilter').value;
+  const data = await apiFetch(`${API}/activations?page=${page}&limit=30${status ? '&status=' + status : ''}`);
+  if (!data) return;
+
+  document.getElementById('activationsTable').innerHTML = data.activations.length
+    ? data.activations.map(a => `<tr>
+        <td style="font-size:12px">${a.user?.email || '—'}</td>
+        <td style="font-family:monospace;font-size:12px">${a.number || '—'}</td>
+        <td>${a.service || '—'}</td>
+        <td>${statusBadge(a.status)}</td>
+        <td style="font-family:monospace;font-size:13px;font-weight:600;color:var(--success)">${a.code || '—'}</td>
+        <td style="font-size:12px;color:var(--gray-400)">${timeAgo(a.created_at)}</td>
+      </tr>`).join('')
+    : `<tr><td colspan="6" class="empty"><i class="fas fa-bolt"></i>No activations found</td></tr>`;
+
+  renderPagination('activationsPagination', data.page, data.pages, loadActivations);
+}
+
+// ── Pagination helper ──────────────────────────────────────────────────────────
+function renderPagination(containerId, current, total, loadFn) {
+  const el = document.getElementById(containerId);
+  if (total <= 1) { el.innerHTML = ''; return; }
+  el.innerHTML = `
+    <button class="page-btn" onclick="${loadFn.name}(${current - 1})" ${current <= 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>
+    <span>Page ${current} of ${total}</span>
+    <button class="page-btn" onclick="${loadFn.name}(${current + 1})" ${current >= total ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+}
+
+// Init
+loadStats();
+</script>
+</body>
+</html>
